@@ -1,0 +1,61 @@
+/* Reset + Global Layout Fix */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* VERY IMPORTANT: Fixes Login Page Height Issue */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+/* Smooth scroll everywhere */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Default background for whole app (can change later) */
+body {
+  background-color: #f4f6fa;
+}
+
+/* Remove link underline + add hover color */
+a {
+  text-decoration: none;
+  color: #4e54c8;
+}
+
+a:hover {
+  color: #3d3fa6;
+}
+
+/* Buttons common styling override */
+button {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Scrollbar styling (smooth and minimal) */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e2e3e7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

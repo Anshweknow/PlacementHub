@@ -1,0 +1,102 @@
+/* ========= CANDIDATE CARD GLASS UI ========= */
+
+.candidate-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  border-radius: 20px;
+  
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.candidate-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ========= CANDIDATE INFO & NAME (FIXED COLOR) ========= */
+
+.candidate-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.candidate-info h4 {
+  font-size: 18px;
+  font-weight: 700;
+  /* CHANGE THIS: Ensures name is visible on dark background */
+  color: #f8fafc; 
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.candidate-info p {
+  font-size: 13px;
+  /* MATCH SCORE COLOR: Light gray/blue */
+  color: #94a3b8; 
+  margin-top: 4px;
+}
+
+/* ========= AVATAR ========= */
+
+.candidate-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* ========= VIEW PROFILE BUTTON ========= */
+
+.candidate-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.candidate-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+  filter: brightness(1.1);
+}
+
+/* ========= RESPONSIVE ========= */
+
+@media (max-width: 480px) {
+  .candidate-card {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .candidate-left {
+    flex-direction: column;
+  }
+}

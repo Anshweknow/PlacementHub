@@ -1,0 +1,193 @@
+/* ========= DYNAMIC BACKGROUND ========= */
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e1b4b);
+  background-size: 400% 400%;
+  animation: meshGradient 12s ease infinite;
+  overflow-x: hidden;
+}
+
+@keyframes meshGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========= ENHANCED GLASS CARD ========= */
+.profile-card {
+  width: 100%;
+  max-width: 650px;
+  padding: 40px 32px;
+  border-radius: 28px;
+  
+  /* FORCE SOLID WHITE FOR HR VIEW VISIBILITY */
+  background: #ffffff !important; 
+  backdrop-filter: none !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  
+  animation: profilePop 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 0 auto;
+}
+
+@keyframes profilePop {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ========= PROFILE HEADER & AVATAR ========= */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #6366f1, #c084fc);
+  color: white !important; /* Keep avatar initial white */
+  font-size: 28px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4);
+}
+
+.profile-name {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a !important; /* FORCE DARK NAVY */
+}
+
+.profile-subtitle {
+  font-size: 14px;
+  color: #64748b !important; /* FORCE SLATE GRAY */
+}
+
+/* ========= MODERN DIVIDER ========= */
+.profile-divider {
+  height: 2px;
+  background: #f1f5f9; /* Solid light gray divider */
+  margin: 24px 0;
+}
+
+/* ========= SECTIONS & GRID ========= */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.profile-section h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4f46e5 !important; /* FORCE INDIGO */
+  margin-bottom: 12px;
+}
+
+.profile-section p {
+  font-size: 15px;
+  color: #334155 !important; /* FORCE DARK TEXT */
+  margin-bottom: 8px;
+}
+
+.profile-section p strong {
+  color: #1e293b !important;
+  font-weight: 700;
+}
+
+.highlight-text {
+  color: #6366f1 !important;
+  font-weight: 800;
+}
+
+/* ========= SKILL ASSESSMENT RESULTS (NEW) ========= */
+.test-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.test-result-item {
+  background: #f8fafc !important; /* LIGHT GRAY BACKGROUND */
+  border: 1px solid #e2e8f0 !important;
+  padding: 14px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.test-meta { display: flex; flex-direction: column; }
+.test-cat { font-weight: 700; color: #1e293b !important; font-size: 14px; }
+.test-date { font-size: 11px; color: #64748b !important; }
+
+.test-score-box { text-align: right; }
+.score-percent { color: #10b981 !important; font-weight: 900; font-size: 18px; display: block; }
+.score-raw { font-size: 11px; color: #94a3b8 !important; }
+
+/* ========= SKILLS TAGS ========= */
+.skill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-tag {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
+  border: 1px solid #c7d2fe !important;
+}
+
+/* ========= BUTTONS ========= */
+.resume-view-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: #1e293b !important; /* DARK NAVY BUTTON */
+  color: #ffffff !important;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.resume-view-btn:hover { background: #0f172a !important; }
+
+.edit-profile-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4f46e5, #9333ea) !important;
+  color: white !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+}
+
+.back-btn-secondary {
+  margin-top: 15px;
+  width: 100%;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.back-btn-secondary:hover { background: #e2e8f0 !important; }
