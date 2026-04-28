@@ -43,18 +43,18 @@ function JobDetails() {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>{job.jobTitle}</h2>
+      <h2 style={styles.title}>{job.title}</h2>
 
-      <p><strong>Company:</strong> {job.companyName}</p>
+      <p><strong>Company:</strong> {job.postedBy?.fullName || "PlacementHub"}</p>
       <p><strong>Location:</strong> {job.location}</p>
-      <p><strong>Salary:</strong> {job.salaryRange}</p>
+      <p><strong>Salary:</strong> {job.salary || "Not disclosed"}</p>
 
       <h3>Description</h3>
-      <p>{job.jobDescription}</p>
+      <p>{job.description}</p>
 
       <h3>Skills Required</h3>
       <div style={styles.skillsBox}>
-        {(job.skillsRequired || []).map((skill, i) => (
+        {(job.skills || []).map((skill, i) => (
           <span key={i} style={styles.skillBadge}>{skill}</span>
         ))}
       </div>

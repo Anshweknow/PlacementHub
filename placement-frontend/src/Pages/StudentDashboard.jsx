@@ -1,34 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import axios from "axios";
+import { useTheme } from "../Context/ThemeContext";
 import StatCard from "../Components/StatCard";
 import "./StudentDashboard.css";
 
 const StudentDashboard = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-
-  // State for Test History Modal
   const [showHistory, setShowHistory] = useState(false);
   const [testHistory, setTestHistory] = useState([]);
+  const [applicationsCount, setApplicationsCount] = useState(0);
+  const token = localStorage.getItem("token");
 
-  // Fetch history from localStorage
   useEffect(() => {
-    const savedHistory = JSON.parse(localStorage.getItem("testHistory") || "[]");
-    setTestHistory(savedHistory);
-  }, [showHistory]); // Refresh whenever modal opens
+    if (!token) return;
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    axios
+      .get("http://localhost:5000/profile/test-history", { headers })
+      .then((res) => setTestHistory(res.data.testHistory || []))
+      .catch(() => setTestHistory([]));
+
+    axios
+      .get("http://localhost:5000/application/my", { headers })
+      .then((res) => setApplicationsCount((res.data || []).length))
+      .catch(() => setApplicationsCount(0));
+  }, [token, showHistory]);
 
   const stats = {
-    applicationsCount: 0,
+    applicationsCount,
     testsCompleted: testHistory.length,
-    avgScore: testHistory.length 
-      ? Math.round(testHistory.reduce((acc, curr) => acc + (curr.score / curr.total * 100), 0) / testHistory.length)
+    avgScore: testHistory.length
+      ? Math.round(
+          testHistory.reduce((acc, curr) => acc + (curr.score / curr.total) * 100, 0) /
+            testHistory.length
+        )
       : 0,
   };
 
   return (
     <div className={`student-dashboard ${theme} animated-bg`}>
-      {/* NAVBAR */}
       <nav className="dashboard-navbar">
         <h2 className="brand" onClick={() => navigate("/")}>PlacementHub</h2>
         <div className="nav-actions">
@@ -41,15 +54,13 @@ const StudentDashboard = () => {
         </div>
       </nav>
 
-      {/* HERO SECTION */}
       <header className="dashboard-hero">
         <div className="hero-text">
           <h1>Welcome back 👋</h1>
-          <p>Your career growth dashboard</p>
+          <p>Track tests, update your profile, and apply to jobs.</p>
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
       <div className="dashboard-main">
         <div className="stats-container">
           <StatCard icon="📝" value={stats.applicationsCount} label="Applications" />
@@ -58,24 +69,23 @@ const StudentDashboard = () => {
         </div>
 
         <div className="main-grid">
-          {/* SKILL TEST CARD */}
           <div className="section-card">
-            <h3>Skill Assessment</h3>
-            <p className="small-text">Improve your profile visibility with tests.</p>
+            <h3>Skill Assessment Module 2.0</h3>
+            <p className="small-text">Timed quizzes with domain-specific question banks.</p>
             <div className="actions-list">
               <button className="quick-btn primary-gradient" onClick={() => navigate("/skill-test")}>
                 Take Skill Test
               </button>
-              {/* FIXED: Ensure this button sets showHistory to true */}
               <button className="quick-btn outline-btn" onClick={() => setShowHistory(true)}>
-                📜 Test Taken History
+                📜 Test History
               </button>
             </div>
           </div>
 
           <div className="section-card">
-            <h3>Account Settings</h3>
+            <h3>Career Actions</h3>
             <div className="actions-list">
+              <button className="quick-btn" onClick={() => navigate("/jobs")}>Browse Jobs</button>
               <button className="quick-btn" onClick={() => navigate("/profile")}>View Profile</button>
               <button className="quick-btn" onClick={() => navigate("/my-applications")}>My Applications</button>
             </div>
@@ -83,7 +93,6 @@ const StudentDashboard = () => {
         </div>
       </div>
 
-      {/* FIXED: TEST HISTORY MODAL (Rendered outside the main grid but inside the wrapper) */}
       {showHistory && (
         <div className="modal-overlay" onClick={() => setShowHistory(false)}>
           <div className="history-modal-card" onClick={(e) => e.stopPropagation()}>
@@ -91,23 +100,17 @@ const StudentDashboard = () => {
               <h2 className="dark-text">Assessment History</h2>
               <button className="close-x" onClick={() => setShowHistory(false)}>&times;</button>
             </div>
-            
+
             <div className="history-content-scroll">
               {testHistory.length > 0 ? (
                 <table className="history-table">
-                  <thead>
-                    <tr>
-                      <th>Domain</th>
-                      <th>Score</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>Domain</th><th>Score</th><th>Date</th></tr></thead>
                   <tbody>
                     {testHistory.map((test, index) => (
                       <tr key={index}>
                         <td>{test.category}</td>
                         <td className="score-cell-green">{test.score} / {test.total}</td>
-                        <td>{test.date}</td>
+                        <td>{new Date(test.date).toLocaleDateString()}</td>
                       </tr>
                     ))}
                   </tbody>

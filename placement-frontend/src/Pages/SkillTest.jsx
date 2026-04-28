@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { questionsData } from "../data/questionsData";
 import "./SkillTest.css";
 
@@ -15,6 +16,7 @@ const SkillTest = () => {
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
   const [showResult, setShowResult] = useState(false);
   const [userAnswers, setUserAnswers] = useState({}); // Stores answers for "Back" logic
+  const token = localStorage.getItem("token");
 
   // --- Logic: Start Test ---
   const startCategoryTest = (cat) => {
@@ -36,15 +38,13 @@ const SkillTest = () => {
     setTestActive(false);
     setShowResult(true);
 
-    // Save to LocalStorage for History
-    const history = JSON.parse(localStorage.getItem("testHistory") || "[]");
-    const newEntry = {
-      category,
-      score,
-      total: currentQuestions.length,
-      date: new Date().toLocaleDateString(),
-    };
-    localStorage.setItem("testHistory", JSON.stringify([newEntry, ...history]));
+    if (token) {
+      axios.post(
+        "http://localhost:5000/profile/test-result",
+        { category, score, total: currentQuestions.length },
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).catch(() => null);
+    }
   }, [category, score, currentQuestions]);
 
   // --- Logic: Timer ---

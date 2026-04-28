@@ -43,10 +43,10 @@ const Profile = () => {
         {/* HEADER SECTION */}
         <div className="profile-header">
           <div className="profile-avatar">
-            {(profile.fullName || user.name || "U").charAt(0).toUpperCase()}
+            {(profile.fullName || user.fullName || "U").charAt(0).toUpperCase()}
           </div>
           <div className="profile-title-area">
-            <h2 className="profile-name">{profile.fullName || user.name}</h2>
+            <h2 className="profile-name">{profile.fullName || user.fullName}</h2>
             <p className="profile-subtitle">{profile.college || "Student at PlacementHub"}</p>
           </div>
         </div>
@@ -119,8 +119,15 @@ const Profile = () => {
           <h4>Resume</h4>
           {profile.resumeUrl ? (
             <div className="resume-actions">
+              <iframe
+                title="Resume Preview"
+                src={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : `http://localhost:5000${profile.resumeUrl}`}
+                width="100%"
+                height="320"
+                style={{ border: "1px solid #e2e8f0", borderRadius: "12px", marginBottom: "12px" }}
+              />
               <a
-                href={`http://localhost:5000${profile.resumeUrl}`}
+                href={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : `http://localhost:5000${profile.resumeUrl}`}
                 target="_blank"
                 rel="noreferrer"
                 className="resume-view-btn"

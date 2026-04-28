@@ -60,16 +60,16 @@ function Jobs() {
             className="job-card"
             onClick={() => navigate(`/job/${job._id}`)}
           >
-            <h3 className="job-title">{job.jobTitle}</h3>
+            <h3 className="job-title">{job.title}</h3>
 
-            <p className="job-detail"><strong>🏢 Company:</strong> {job.companyName}</p>
-            <p className="job-detail"><strong>📍 Location:</strong> {job.location || "Not specified"}</p>
-            <p className="job-detail"><strong>💰 Salary:</strong> {job.salaryRange}</p>
+            <p className="job-detail"><strong>🏢 Company:</strong> {job.postedBy?.fullName || "PlacementHub"}</p>
+            <p className="job-detail"><strong>📍 Location:</strong> {"Remote / On-site"}</p>
+            <p className="job-detail"><strong>💰 Salary:</strong> {job.salary || "Not disclosed"}</p>
 
             <div className="skills-heading">Required Skills</div>
 
             <div className="skills-box">
-              {(job.skillsRequired || []).map((skill, i) => (
+              {(job.skills || []).map((skill, i) => (
                 <span key={i} className="skill-badge">{skill}</span>
               ))}
             </div>

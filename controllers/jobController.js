@@ -47,7 +47,7 @@ exports.getJobsWithApplyStatus = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    const jobs = await Job.find().sort({ createdAt: -1 });
+    const jobs = await Job.find().populate("postedBy", "fullName email").sort({ createdAt: -1 });
 
     const applied = await Application.find({
       studentId: userId
@@ -72,7 +72,7 @@ exports.getJobsWithApplyStatus = async (req, res) => {
 =========================== */
 exports.getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await Job.findById(req.params.id).populate("postedBy", "fullName email");
 
     if (!job) return res.status(404).json({ msg: "Job not found" });
 

@@ -37,11 +37,11 @@ function ApplicationsHR() {
       <div style={styles.grid}>
         {applications.map((app) => (
           <div key={app._id} style={styles.card}>
-            <h3 style={styles.jobTitle}>{app.job?.jobTitle}</h3>
+            <h3 style={styles.jobTitle}>{app.job?.title}</h3>
 
-            <p><strong>Applicant:</strong> {app.student?.name}</p>
+            <p><strong>Applicant:</strong> {app.student?.fullName}</p>
             <p><strong>Email:</strong> {app.student?.email}</p>
-            <p><strong>Job:</strong> {app.job?.companyName}</p>
+            <p><strong>Job:</strong> {app.job?.postedBy?.fullName || "PlacementHub"}</p>
 
             <p><strong>Applied On:</strong> {new Date(app.createdAt).toDateString()}</p>
           </div>
