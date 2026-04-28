@@ -1,62 +1,149 @@
-const User = require("../models/user");
+const User = require("../models/User");
 const StudentProfile = require("../models/StudentProfile");
 const Job = require("../models/job");
 
-// SAVE TEST RESULT TO DATABASE
-exports.addTestResult = async (req, res) => {
+const normalizeSkills = (skills = "") => {
+  if (Array.isArray(skills)) return skills.map((s) => String(s).trim()).filter(Boolean);
+  return String(skills)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+};
+
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+    const profile = await StudentProfile.findOne({ userId: req.user.userId });
+
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    return res.json({ user, profile: profile || {} });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { category, score, total, date } = req.body;
+    const update = {
+      fullName: req.body.fullName,
+      phone: req.body.phone,
+      college: req.body.college,
+      branch: req.body.branch,
+      cgpa: req.body.cgpa,
+      twelfthMarks: req.body.twelfthMarks,
+      skills: normalizeSkills(req.body.skills),
+    };
+
+    if (req.file) {
+      update.resumeUrl = `/uploads/${req.file.filename}`;
+      update.resumeOriginalName = req.file.originalname;
+    }
+
+    const cleanedUpdate = Object.fromEntries(
+      Object.entries(update).filter(([_, value]) => value !== undefined)
+    );
 
     const profile = await StudentProfile.findOneAndUpdate(
       { userId },
-      { 
-        $push: { 
-          testHistory: { category, score, total, date } 
-        } 
+      { $set: cleanedUpdate },
+      { upsert: true, new: true }
+    );
+
+    if (req.body.fullName) {
+      await User.findByIdAndUpdate(userId, { $set: { fullName: req.body.fullName } });
+    }
+
+    return res.json({ msg: "Profile updated successfully", profile });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.addTestResult = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { category, score, total } = req.body;
+
+    if (!category || score === undefined || total === undefined) {
+      return res.status(400).json({ msg: "category, score and total are required" });
+    }
+
+    const profile = await StudentProfile.findOneAndUpdate(
+      { userId },
+      {
+        $push: {
+          testHistory: {
+            category,
+            score,
+            total,
+            date: new Date(),
+          },
+        },
       },
       { new: true, upsert: true }
     );
 
-    res.json({ msg: "Test result saved", testHistory: profile.testHistory });
+    return res.json({ msg: "Test result saved", testHistory: profile.testHistory });
   } catch (err) {
-    console.error("ADD TEST RESULT ERROR:", err);
-    res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.getTestHistory = async (req, res) => {
+  try {
+    const profile = await StudentProfile.findOne({ userId: req.user.userId }).select("testHistory");
+    return res.json({ testHistory: profile?.testHistory || [] });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
 
 exports.getProfileById = async (req, res) => {
   try {
     const userId = req.params.id;
-
-    // UPDATED DUMMY DATA FOR HR VIEWING
-    if (userId === "1" || userId === "2") {
-      return res.json({
-        user: { 
-          name: userId === "1" ? "Ansh Kulshreshtha" : "Rahul Sharma", 
-          email: userId === "1" ? "ansh@example.com" : "rahul@example.com" 
-        },
-        profile: {
-          fullName: userId === "1" ? "Ansh Kulshreshtha" : "Rahul Sharma",
-          college: userId === "1" ? "XYZ Institute" : "ABC University",
-          branch: userId === "1" ? "CSE" : "IT",
-          skills: ["React", "Node.js", "MongoDB"],
-          phone: "9876543210",
-          cgpa: "8.5",
-          // TEST HISTORY NOW INCLUDED
-          testHistory: userId === "1" ? [
-            { category: "Programming", score: 12, total: 15, date: "29/01/2026" },
-            { category: "Web Development", score: 14, total: 15, date: "29/01/2026" }
-          ] : []
-        }
-      });
-    }
-
     const user = await User.findById(userId).select("-password");
     const profile = await StudentProfile.findOne({ userId });
 
-    res.json({ user, profile: profile || {} });
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    return res.json({ user, profile: profile || {} });
   } catch (err) {
-    res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.matchCandidates = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const job = await Job.findById(jobId);
+
+    if (!job) return res.status(404).json({ msg: "Job not found" });
+
+    const profiles = await StudentProfile.find({
+      skills: { $in: job.skills || [] },
+    }).populate("userId", "fullName email");
+
+    const normalizedJobSkills = (job.skills || []).map((s) => s.toLowerCase());
+
+    const candidates = profiles
+      .map((profile) => {
+        const profileSkills = (profile.skills || []).map((s) => s.toLowerCase());
+        const common = profileSkills.filter((s) => normalizedJobSkills.includes(s));
+        const matchPercent = normalizedJobSkills.length
+          ? Math.round((common.length / normalizedJobSkills.length) * 100)
+          : 0;
+
+        return {
+          user: profile.userId,
+          profile,
+          matchPercent,
+        };
+      })
+      .sort((a, b) => b.matchPercent - a.matchPercent);
+
+    return res.json(candidates);
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
   }
 };

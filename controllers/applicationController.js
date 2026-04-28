@@ -32,7 +32,7 @@ exports.applyToJob = async (req, res) => {
 exports.getMyApplications = async (req, res) => {
   try {
     const apps = await Application.find({ studentId: req.user.userId })
-      .populate("jobId", "jobTitle companyName salaryRange");
+      .populate({ path: "jobId", select: "title salary skills postedBy", populate: { path: "postedBy", select: "fullName email" } });
 
     res.json(apps);
   } catch (err) {
@@ -46,8 +46,8 @@ exports.getMyApplications = async (req, res) => {
 exports.getAllApplicationsForHR = async (req, res) => {
   try {
     const apps = await Application.find()
-      .populate("studentId", "name email")
-      .populate("jobId", "jobTitle companyName salaryRange");
+      .populate("studentId", "fullName email")
+      .populate({ path: "jobId", select: "title salary skills postedBy", populate: { path: "postedBy", select: "fullName email" } });
 
     const result = apps.map((app) => ({
       _id: app._id,

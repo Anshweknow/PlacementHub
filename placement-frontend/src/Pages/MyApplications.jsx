@@ -42,15 +42,15 @@ function MyApplications() {
         {applications.map((app) => (
           <div key={app._id} className="myapp-card">
             <h3 className="myapp-title">
-              {app.jobId?.jobTitle || "Job Title"}
+              {app.jobId?.title || "Job Title"}
             </h3>
 
             <p className="myapp-detail">
-              <strong>🏢 Company:</strong> {app.jobId?.companyName}
+              <strong>🏢 Company:</strong> {app.jobId?.postedBy?.fullName || "PlacementHub"}
             </p>
 
             <p className="myapp-detail">
-              <strong>💰 Salary:</strong> {app.jobId?.salaryRange}
+              <strong>💰 Salary:</strong> {app.jobId?.salary || "Not disclosed"}
             </p>
 
             <p className="myapp-detail">
@@ -59,7 +59,7 @@ function MyApplications() {
             </p>
 
             <div className="myapp-skills">
-              {app.jobId?.skillsRequired?.map((skill, i) => (
+              {app.jobId?.skills?.map((skill, i) => (
                 <span key={i} className="myapp-skill">
                   {skill}
                 </span>

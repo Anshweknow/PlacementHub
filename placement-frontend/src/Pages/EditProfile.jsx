@@ -17,6 +17,7 @@ function EditProfile() {
   });
 
   const [success, setSuccess] = useState(false);
+  const [resumePreview, setResumePreview] = useState("");
   const token = localStorage.getItem("token");
 
   /* FETCH PROFILE */
@@ -53,7 +54,9 @@ function EditProfile() {
   };
 
   const handleFile = (e) => {
-    setForm({ ...form, resume: e.target.files[0] });
+    const file = e.target.files[0];
+    setForm({ ...form, resume: file });
+    setResumePreview(file ? URL.createObjectURL(file) : "");
   };
 
   /* SUBMIT */
@@ -145,6 +148,9 @@ function EditProfile() {
             <div className="file-input-wrapper">
               <input type="file" accept=".pdf" onChange={handleFile} />
             </div>
+            {resumePreview && (
+              <iframe title="Resume Preview" src={resumePreview} width="100%" height="300" style={{ marginTop: "12px", borderRadius: "10px", border: "1px solid #e2e8f0" }} />
+            )}
           </div>
 
           <button type="submit" className="save-btn">

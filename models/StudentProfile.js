@@ -1,28 +1,41 @@
 const mongoose = require("mongoose");
 
-const StudentProfileSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
+const TestResultSchema = new mongoose.Schema(
+  {
+    category: { type: String, required: true },
+    score: { type: Number, required: true },
+    total: { type: Number, required: true },
+    date: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
 
+const StudentProfileSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
     fullName: String,
     phone: String,
     college: String,
-
-    // NEW fields
     branch: String,
     cgpa: String,
     twelfthMarks: String,
-
-    // Skills should allow array OR string
     skills: {
-        type: [String],
-        default: []
+      type: [String],
+      default: [],
     },
-
-    resumeUrl: String
-});
+    resumeUrl: String,
+    resumeOriginalName: String,
+    testHistory: {
+      type: [TestResultSchema],
+      default: [],
+    },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("StudentProfile", StudentProfileSchema);

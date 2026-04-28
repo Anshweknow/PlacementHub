@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import StudentDashboard from "./Pages/StudentDashboard";
-import Jobs from "./Pages/jobs";
+import Jobs from "./Pages/Jobs";
 import Profile from "./Pages/Profile";
 import EditProfile from "./Pages/EditProfile";
 import MyApplications from "./Pages/MyApplications";
@@ -11,7 +11,7 @@ import CreateJob from "./Pages/CreateJob";
 import DashboardHR from "./Pages/DashboardHR";
 import ApplicationsHR from "./Pages/ApplicationsHR";
 import MatchCandidates from "./Pages/MatchCandidates";
-import { useTheme } from "./context/ThemeContext";
+import { useTheme } from "./Context/ThemeContext";
 import SkillTest from "./Pages/SkillTest";
 
 function App() {
@@ -19,7 +19,6 @@ function App() {
 
   return (
     <>
-      {/* 🌗 Dark / Light Toggle */}
       <button
         onClick={toggleTheme}
         style={{
@@ -42,21 +41,19 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* STUDENT */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/job/:id" element={<JobDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/my-applications" element={<MyApplications />} />
+        <Route path="/skill-test" element={<SkillTest />} />
 
-        {/* HR */}
         <Route path="/dashboard-hr" element={<DashboardHR />} />
         <Route path="/create-job" element={<CreateJob />} />
         <Route path="/applications-hr" element={<ApplicationsHR />} />
         <Route path="/match/:jobId" element={<MatchCandidates />} />
         <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/skill-test" element={<SkillTest />} />
       </Routes>
     </>
   );
