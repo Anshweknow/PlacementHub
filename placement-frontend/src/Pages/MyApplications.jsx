@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import "./MyApplications.css";
 
@@ -12,7 +13,7 @@ function MyApplications() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/application/my", {
+      .get(getApiUrl("/application/my"), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useTheme } from "../Context/ThemeContext";
 import StatCard from "../Components/StatCard";
 import "./StudentDashboard.css";
@@ -19,12 +20,12 @@ const StudentDashboard = () => {
     const headers = { Authorization: `Bearer ${token}` };
 
     axios
-      .get("http://localhost:5000/profile/test-history", { headers })
+      .get(getApiUrl("/profile/test-history"), { headers })
       .then((res) => setTestHistory(res.data.testHistory || []))
       .catch(() => setTestHistory([]));
 
     axios
-      .get("http://localhost:5000/application/my", { headers })
+      .get(getApiUrl("/application/my"), { headers })
       .then((res) => setApplicationsCount((res.data || []).length))
       .catch(() => setApplicationsCount(0));
   }, [token, showHistory]);

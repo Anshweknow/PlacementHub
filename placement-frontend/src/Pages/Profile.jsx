@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useNavigate, useParams } from "react-router-dom";
 import "./Profile.css";
 
@@ -13,7 +14,7 @@ const Profile = () => {
   useEffect(() => {
     if (!token) return;
 
-    const baseUrl = "http://localhost:5000/profile";
+    const baseUrl = getApiUrl("/profile");
     const url = id && id !== "undefined" ? `${baseUrl}/${id}` : `${baseUrl}/me`;
 
     axios
@@ -121,13 +122,13 @@ const Profile = () => {
             <div className="resume-actions">
               <iframe
                 title="Resume Preview"
-                src={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : `http://localhost:5000${profile.resumeUrl}`}
+                src={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : getApiUrl(profile.resumeUrl)}
                 width="100%"
                 height="320"
                 style={{ border: "1px solid #e2e8f0", borderRadius: "12px", marginBottom: "12px" }}
               />
               <a
-                href={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : `http://localhost:5000${profile.resumeUrl}`}
+                href={profile.resumeUrl.startsWith("http") ? profile.resumeUrl : getApiUrl(profile.resumeUrl)}
                 target="_blank"
                 rel="noreferrer"
                 className="resume-view-btn"

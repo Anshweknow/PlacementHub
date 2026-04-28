@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import "./Jobs.css";
 
@@ -13,7 +14,7 @@ function Jobs() {
 
   const loadJobs = () => {
     axios
-      .get("http://localhost:5000/job/all", {
+      .get(getApiUrl("/job/all"), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -30,7 +31,7 @@ function Jobs() {
   const handleApply = async (jobId) => {
     try {
       await axios.post(
-        "http://localhost:5000/application/apply",
+        getApiUrl("/application/apply"),
         { jobId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

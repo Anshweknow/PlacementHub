@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 
 function ApplicationsHR() {
   const [applications, setApplications] = useState([]);
@@ -13,7 +14,7 @@ function ApplicationsHR() {
 
   const fetchApplications = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/application/all", {
+      const res = await axios.get(getApiUrl("/application/all"), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
