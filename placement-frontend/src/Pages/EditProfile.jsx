@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import "./EditProfile.css";
 
@@ -25,7 +26,7 @@ function EditProfile() {
     if (!token) return;
 
     axios
-      .get("http://localhost:5000/profile/me", {
+      .get(getApiUrl("/profile/me"), {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((res) => {
@@ -72,7 +73,7 @@ function EditProfile() {
     if (form.resume) data.append("resume", form.resume);
 
     try {
-      await axios.post("http://localhost:5000/profile/update", data, {
+      await axios.post(getApiUrl("/profile/update"), data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { questionsData } from "../data/questionsData";
 import "./SkillTest.css";
 
@@ -40,7 +41,7 @@ const SkillTest = () => {
 
     if (token) {
       axios.post(
-        "http://localhost:5000/profile/test-result",
+        getApiUrl("/profile/test-result"),
         { category, score, total: currentQuestions.length },
         { headers: { Authorization: `Bearer ${token}` } }
       ).catch(() => null);

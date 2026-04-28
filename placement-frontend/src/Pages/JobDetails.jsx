@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 
 function JobDetails() {
   const { id } = useParams();
@@ -12,7 +13,7 @@ function JobDetails() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/job/${id}`)
+      .get(getApiUrl(`/job/${id}`))
       .then((res) => {
         setJob(res.data);
         setLoading(false);
@@ -26,7 +27,7 @@ function JobDetails() {
   const applyJob = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/application/apply",
+        getApiUrl("/application/apply"),
         { jobId: id },
         { headers: { Authorization: `Bearer ${token}` } }
       );

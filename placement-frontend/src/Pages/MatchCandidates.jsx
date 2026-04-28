@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useParams } from "react-router-dom";
 import CandidateCard from "../Components/CandidateCard";
 
@@ -12,7 +13,7 @@ function MatchCandidates() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/profile/match-candidates/${jobId}`, {
+      .get(getApiUrl(`/profile/match-candidates/${jobId}`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

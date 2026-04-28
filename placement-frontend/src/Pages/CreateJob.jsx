@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 function CreateJob() {
@@ -13,7 +14,7 @@ function CreateJob() {
     e.preventDefault();
     try {
       await axios.post(
-        "http://localhost:5000/job/create",
+        getApiUrl("/job/create"),
         {
           title: form.title,
           description: form.description,
