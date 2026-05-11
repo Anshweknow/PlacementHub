@@ -15,15 +15,16 @@
   ],
   "routes": [
     {
-      "src": "/(auth|profile|job|application|hr)(/.*)?",
+      "src": "/(auth|profile|job|application|hr|uploads)(/.*)?",
       "dest": "/api/index.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/(assets/.*|favicon\\.ico|vite\\.svg|.*\\.(?:js|css|mjs|map|json|png|jpg|jpeg|gif|svg|ico|webp|avif|woff|woff2|ttf|eot))",
+      "dest": "/placement-frontend/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/placement-frontend/index.html"
     }
   ]
 }
