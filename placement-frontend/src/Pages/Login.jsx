@@ -1,6 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
-import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import loginbg from "../assets/loginbg.jpg";
 import "./Login.css";
@@ -18,22 +16,18 @@ function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios.post(getApiUrl("/auth/login"), form);
+    const role = form.role === "hr" ? "hr" : "student";
 
-      localStorage.setItem("token", res.data.token || "trial-mode-token");
-      localStorage.setItem("role", res.data.role);
+    localStorage.setItem("token", "trial-mode-token");
+    localStorage.setItem("role", role);
 
-      if (res.data.role === "hr") {
-        navigate("/dashboard-hr");
-      } else {
-        navigate("/student-dashboard");
-      }
-    } catch (err) {
-      alert(err.response?.data?.msg || "Unable to start trial session");
+    if (role === "hr") {
+      navigate("/dashboard-hr");
+    } else {
+      navigate("/student-dashboard");
     }
   };
 

@@ -31,7 +31,7 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 // Route mounting
-app.use("/auth", ensureDatabaseConnection, require("./Routes/authRoutes"));
+app.use("/auth", require("./Routes/authRoutes"));
 app.use("/profile", ensureDatabaseConnection, require("./Routes/profileRoutes"));
 app.use("/job", ensureDatabaseConnection, require("./Routes/jobRoutes"));
 app.use(
