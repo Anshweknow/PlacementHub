@@ -44,6 +44,13 @@ app.use(
 app.use("/api/profile", ensureDatabaseConnection, require("./Routes/profileRoutes"));
 app.use("/api/jobs", ensureDatabaseConnection, require("./Routes/jobRoutes"));
 app.use("/api/applications", ensureDatabaseConnection, require("./Routes/applicationRoutes"));
+app.use("/api/hr", ensureDatabaseConnection, require("./Routes/hrRoutes"));
+const createHrResourceRouter = require("./Routes/hrResourceRoutes");
+app.use("/api/interviews", ensureDatabaseConnection, createHrResourceRouter("interviews"));
+app.use("/api/messages", ensureDatabaseConnection, createHrResourceRouter("messages"));
+app.use("/api/offers", ensureDatabaseConnection, createHrResourceRouter("offers"));
+app.use("/api/analytics", ensureDatabaseConnection, createHrResourceRouter("analytics"));
+app.use("/api/company-profile", ensureDatabaseConnection, createHrResourceRouter("company-profile"));
 app.use("/hr", ensureDatabaseConnection, require("./Routes/hrRoutes"));
 
 // Static files
