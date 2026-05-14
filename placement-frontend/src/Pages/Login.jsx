@@ -17,8 +17,24 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const trialUsers = {
+    student: {
+      email: "student.trial@placementhub.dev",
+      password: "Student@123",
+    },
+    hr: {
+      email: "hr.trial@placementhub.dev",
+      password: "HR@123456",
+    },
+  };
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleTrialPrefill = (role) => {
+    setForm(trialUsers[role]);
+    setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -56,6 +72,14 @@ function Login() {
 
           <h1>PlacementHub</h1>
           <p>Sign in to manage placements, jobs, applications, and assessments.</p>
+
+          <div className="trial-users" aria-label="Trial login users">
+            <p className="trial-users-title">Try a trial account</p>
+            <div className="trial-users-actions">
+              <button type="button" onClick={() => handleTrialPrefill("student")} className="trial-btn">Use Student Trial</button>
+              <button type="button" onClick={() => handleTrialPrefill("hr")} className="trial-btn">Use HR Trial</button>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="login-form">
             <label htmlFor="email">Email</label>
