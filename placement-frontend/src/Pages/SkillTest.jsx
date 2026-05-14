@@ -46,7 +46,7 @@ const SkillTest = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       ).catch(() => null);
     }
-  }, [category, score, currentQuestions]);
+  }, [category, score, currentQuestions, token]);
 
   // --- Logic: Timer ---
   useEffect(() => {
@@ -54,7 +54,7 @@ const SkillTest = () => {
     if (testActive && timeLeft > 0) {
       timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     } else if (timeLeft === 0 && testActive) {
-      finishTest();
+      setTimeout(finishTest, 0);
     }
     return () => clearInterval(timer);
   }, [testActive, timeLeft, finishTest]);

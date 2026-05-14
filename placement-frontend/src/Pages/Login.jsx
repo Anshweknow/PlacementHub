@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import loginbg from "../assets/loginbg.jpg";
 import "./Login.css";
-import { useTheme } from "../Context/ThemeContext";
+import { useTheme } from "../Context/useTheme";
 
 function Login() {
   const navigate = useNavigate();

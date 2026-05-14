@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { getApiUrl } from "../config/api";
 
@@ -8,11 +8,7 @@ function ApplicationsHR() {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  const fetchApplications = async () => {
+  const fetchApplications = useCallback(async () => {
     try {
       const res = await axios.get(getApiUrl("/application/all"), {
         headers: { Authorization: `Bearer ${token}` },
@@ -24,7 +20,12 @@ function ApplicationsHR() {
       console.log(err);
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    const timer = setTimeout(fetchApplications, 0);
+    return () => clearTimeout(timer);
+  }, [fetchApplications]);
 
   if (loading) return <h3 style={{ textAlign: "center" }}>Loading...</h3>;
 

@@ -2,16 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import StudentDashboard from "./Pages/StudentDashboard";
-import Jobs from "./Pages/Jobs";
-import Profile from "./Pages/Profile";
+import Jobs from "./pages/student/BrowseJobs";
+import Profile from "./pages/student/ViewProfile";
 import EditProfile from "./Pages/EditProfile";
-import MyApplications from "./Pages/MyApplications";
+import MyApplications from "./pages/student/MyApplications";
 import JobDetails from "./Pages/JobDetails";
 import CreateJob from "./Pages/CreateJob";
 import DashboardHR from "./Pages/DashboardHR";
 import ApplicationsHR from "./Pages/ApplicationsHR";
 import MatchCandidates from "./Pages/MatchCandidates";
-import { useTheme } from "./Context/ThemeContext";
+import { useTheme } from "./Context/useTheme";
 import SkillTest from "./Pages/SkillTest";
 
 function App() {
