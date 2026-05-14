@@ -48,10 +48,13 @@
 .hr-brand span { width: 46px; height: 46px; border-radius: 16px; }
 .hr-brand strong, .hr-brand small { display: block; }
 .hr-brand small { color: #cbd5e1; }
-.hr-sidebar.is-collapsed .hr-brand div, .hr-sidebar.is-collapsed nav button:not(.active) { overflow: hidden; }
+.hr-sidebar.is-collapsed .hr-brand div { overflow: hidden; }
 .hr-sidebar nav { display: grid; gap: 7px; }
-.hr-sidebar nav button { display: flex; align-items: center; gap: 10px; border: 0; border-radius: 18px; padding: 13px 14px; color: #dbeafe; background: transparent; cursor: pointer; text-align: left; font-weight: 700; }
-.hr-sidebar nav button span { width: 26px; opacity: .8; font-size: 11px; }
+.hr-sidebar nav button { display: flex; align-items: center; gap: 12px; min-width: 0; border: 0; border-radius: 18px; padding: 13px 14px; color: #dbeafe; background: transparent; cursor: pointer; text-align: left; font-weight: 700; }
+.hr-sidebar nav button span { flex: 0 0 28px; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 10px; background: rgba(255, 255, 255, .08); font-size: 15px; line-height: 1; }
+.hr-sidebar nav button strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hr-sidebar.is-collapsed nav button { justify-content: center; padding-inline: 10px; }
+.hr-sidebar.is-collapsed nav button span { flex-basis: 34px; width: 34px; height: 34px; }
 .hr-sidebar nav button.active, .hr-sidebar nav button:hover { color: white; background: rgba(255, 255, 255, .13); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); }
 
 .hr-main { flex: 1; min-width: 0; padding: 22px; }
