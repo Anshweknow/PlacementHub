@@ -27,6 +27,7 @@ exports.applyToJob = async (req, res) => {
 
 exports.getMyApplications = async (req, res) => {
   try {
+    if (req.user.role === "hr") return exports.getAllApplicationsForHR(req, res);
     const { status = "all" } = req.query;
     const filter = { studentId: req.user.userId };
 

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import StudentDashboard from "./Pages/StudentDashboard";
@@ -16,10 +16,12 @@ import SkillTest from "./Pages/SkillTest";
 
 function App() {
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const hideGlobalThemeToggle = location.pathname === "/dashboard-hr";
 
   return (
     <>
-      <button
+      {!hideGlobalThemeToggle && <button
         onClick={toggleTheme}
         style={{
           position: "fixed",
@@ -35,7 +37,7 @@ function App() {
         }}
       >
         {theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode"}
-      </button>
+      </button>}
 
       <Routes>
         <Route path="/" element={<Login />} />

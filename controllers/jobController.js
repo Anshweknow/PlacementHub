@@ -20,12 +20,17 @@ const buildJobPayload = (body, userId) => {
 
   return {
     title: body.title,
+    department: body.department,
     description: body.description,
     responsibilities: parseList(body.responsibilities),
     qualifications: parseList(body.qualifications),
     preferredSkills: parseList(body.preferredSkills),
+    requiredSkills: parseList(body.requiredSkills).length ? parseList(body.requiredSkills) : skills,
     skills,
     eligibility: body.eligibility,
+    assessmentDomain: body.assessmentDomain,
+    autoGenerateQuiz: Boolean(body.autoGenerateQuiz),
+    hiringStages: parseList(body.hiringStages),
     hiringProcess: parseList(body.hiringProcess),
     openings: body.openings,
     location: body.location,
@@ -185,6 +190,41 @@ exports.toggleSaveJob = async (req, res) => {
     const update = alreadySaved ? { $pull: { savedBy: userId } } : { $addToSet: { savedBy: userId } };
     await Job.findByIdAndUpdate(job._id, update);
     return res.json({ msg: alreadySaved ? "Job removed from favorites" : "Job saved", saved: !alreadySaved });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.updateJob = async (req, res) => {
+  try {
+    if (req.user.role !== "hr") return res.status(403).json({ msg: "Only HR can update jobs" });
+    const payload = buildJobPayload(req.body, req.user.userId);
+    const job = await Job.findOneAndUpdate({ _id: req.params.id }, payload, { new: true, runValidators: true });
+    if (!job) return res.status(404).json({ msg: "Job not found" });
+    return res.json({ msg: "Job updated successfully", job });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.deleteJob = async (req, res) => {
+  try {
+    if (req.user.role !== "hr") return res.status(403).json({ msg: "Only HR can delete jobs" });
+    const job = await Job.findByIdAndDelete(req.params.id);
+    if (!job) return res.status(404).json({ msg: "Job not found" });
+    await Application.deleteMany({ jobId: req.params.id });
+    return res.json({ msg: "Job deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+exports.changeJobStatus = async (req, res) => {
+  try {
+    if (req.user.role !== "hr") return res.status(403).json({ msg: "Only HR can change job status" });
+    const job = await Job.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    if (!job) return res.status(404).json({ msg: "Job not found" });
+    return res.json({ msg: "Job status updated", job });
   } catch (err) {
     return res.status(500).json({ msg: "Server error", error: err.message });
   }
