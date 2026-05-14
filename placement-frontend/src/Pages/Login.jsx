@@ -1,62 +1,79 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import loginbg from "../assets/loginbg.jpg";
 import "./Login.css";
 import { useTheme } from "../Context/useTheme";
+import { getApiUrl, storeSession } from "../config/api";
 
 function Login() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
   const [form, setForm] = useState({
-    role: "student",
+    email: "",
+    password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const role = form.role === "hr" ? "hr" : "student";
+    try {
+      const { data } = await axios.post(getApiUrl("/auth/login"), form);
+      storeSession(data);
 
-    localStorage.setItem("token", "trial-mode-token");
-    localStorage.setItem("role", role);
-
-    if (role === "hr") {
-      navigate("/dashboard-hr");
-    } else {
-      navigate("/student-dashboard");
+      if (data.role === "hr") {
+        navigate("/dashboard-hr");
+      } else {
+        navigate("/student-dashboard");
+      }
+    } catch (err) {
+      setError(err.response?.data?.msg || "Login failed. Please check your credentials and try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={`login-container ${theme}`}>
       <div className="login-background">
-        <img src={loginbg} alt="login" />
+        <img src={loginbg} alt="PlacementHub login" />
       </div>
 
       <div className="login-content">
         <div className="login-card">
-          <button className="theme-toggle" onClick={toggleTheme}>
+          <button className="theme-toggle" onClick={toggleTheme} type="button" aria-label="Toggle theme">
             {theme === "light" ? "🌙" : "☀️"}
           </button>
 
           <h1>PlacementHub</h1>
-          <p>Trial mode: explore features without authentication</p>
+          <p>Sign in to manage placements, jobs, applications, and assessments.</p>
 
           <form onSubmit={handleSubmit} className="login-form">
-            <label>Select Role</label>
-            <select name="role" value={form.role} onChange={handleChange} required>
-              <option value="student">Student</option>
-              <option value="hr">HR</option>
-            </select>
+            <label htmlFor="email">Email</label>
+            <input id="email" type="email" name="email" value={form.email} onChange={handleChange} required autoComplete="email" />
 
-            <button type="submit" className="btn-login">
-              Continue as Trial User
+            <label htmlFor="password">Password</label>
+            <input id="password" type="password" name="password" value={form.password} onChange={handleChange} required autoComplete="current-password" />
+
+            {error && <p className="login-error" role="alert">{error}</p>}
+
+            <button type="submit" className="btn-login" disabled={loading}>
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
+
+          <p className="login-footer">
+            New to PlacementHub? <Link to="/register">Create an account</Link>
+          </p>
         </div>
       </div>
     </div>

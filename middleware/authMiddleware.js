@@ -1,35 +1,37 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const TRIAL_EMAIL = process.env.TRIAL_EMAIL || "trial@placementhub.local";
-const TRIAL_NAME = process.env.TRIAL_NAME || "Trial User";
-
-module.exports = async function (req, res, next) {
+module.exports = async function authMiddleware(req, res, next) {
   try {
-    const requestedRole = String(req.headers["x-trial-role"] || "student").toLowerCase();
-    const role = requestedRole === "hr" ? "hr" : "student";
+    const authHeader = req.headers.authorization || "";
+    const [scheme, token] = authHeader.split(" ");
 
-    let user = await User.findOne({ email: TRIAL_EMAIL });
+    if (scheme !== "Bearer" || !token) {
+      return res.status(401).json({ msg: "Authentication token is required." });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ msg: "Authentication is not configured. Set JWT_SECRET in the environment variables." });
+    }
+
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(payload.userId).select("role");
 
     if (!user) {
-      user = await User.create({
-        fullName: TRIAL_NAME,
-        email: TRIAL_EMAIL,
-        password: "trial-user-no-auth",
-        role,
-      });
-    } else if (user.role !== role) {
-      user.role = role;
-      await user.save();
+      return res.status(401).json({ msg: "User account no longer exists." });
     }
 
     req.user = {
       userId: user._id,
       role: user.role,
-      isTrial: true,
     };
 
-    next();
+    return next();
   } catch (err) {
-    return res.status(500).json({ msg: "Failed to initialize trial user", error: err.message });
+    if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+      return res.status(401).json({ msg: "Invalid or expired authentication token." });
+    }
+
+    return res.status(500).json({ msg: "Authentication failed", error: err.message });
   }
 };

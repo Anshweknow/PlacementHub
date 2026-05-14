@@ -1,5 +1,5 @@
 export const authHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem("token") || "trial-token"}`,
+  ...(localStorage.getItem("token") ? { Authorization: `Bearer ${localStorage.getItem("token")}` } : {}),
 });
 
 export function formatDate(value) {

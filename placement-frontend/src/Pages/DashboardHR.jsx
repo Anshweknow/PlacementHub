@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getApiUrl } from "../config/api";
+import { authHeaders, getApiUrl } from "../config/api";
 import { useTheme } from "../Context/useTheme";
 import "./HRDashboard.css";
 
@@ -112,7 +112,7 @@ const fallbackDashboard = {
   ],
 };
 
-const apiHeaders = { "x-trial-role": "hr" };
+const apiHeaders = authHeaders();
 
 const StatSparkline = ({ values = [2, 5, 4, 7, 9, 8, 11] }) => {
   const max = Math.max(...values);

@@ -29,7 +29,7 @@ This project follows **real-world system architecture**, focusing on scalability
 
 ### ✅ Features
 
-* Secure authentication (JWT-based)
+* Secure authentication (JWT-based registration/login with hashed passwords)
 * Student dashboard with animated mesh gradient UI
 * Profile management (education, skills, resume upload)
 * Resume upload and preview (PDF)
@@ -101,6 +101,7 @@ Each assessment attempt is unique due to question shuffling, preventing repeated
 * MongoDB
 * Mongoose
 * JWT Authentication
+* Bcrypt password hashing
 * Multer (Resume Upload)
 
 ---
@@ -185,11 +186,26 @@ http://localhost:5173
 
 ## 🔐 Environment Variables
 
-Create a `.env` file inside backend:
+Copy `.env.example` to `.env` at the repository root for the backend and create `placement-frontend/.env` for Vite.
+
+Backend variables:
 
 ```
+NODE_ENV=development
+PORT=5000
 MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+JWT_SECRET=use_a_long_random_secret
+JWT_EXPIRES_IN=7d
+CORS_ORIGIN=http://localhost:5173
+CLOUDINARY_CLOUD_NAME=optional_cloudinary_cloud_name
+CLOUDINARY_API_KEY=optional_cloudinary_api_key
+CLOUDINARY_API_SECRET=optional_cloudinary_api_secret
+```
+
+Frontend variables (`placement-frontend/.env`):
+
+```
+VITE_API_BASE_URL=http://localhost:5000
 ```
 
 ---
