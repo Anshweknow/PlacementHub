@@ -39,6 +39,11 @@ app.use(
   ensureDatabaseConnection,
   require("./Routes/applicationRoutes")
 );
+
+// Production API aliases used by the Career Actions module.
+app.use("/api/profile", ensureDatabaseConnection, require("./Routes/profileRoutes"));
+app.use("/api/jobs", ensureDatabaseConnection, require("./Routes/jobRoutes"));
+app.use("/api/applications", ensureDatabaseConnection, require("./Routes/applicationRoutes"));
 app.use("/hr", ensureDatabaseConnection, require("./Routes/hrRoutes"));
 
 // Static files

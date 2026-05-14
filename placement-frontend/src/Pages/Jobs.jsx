@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { getApiUrl } from "../config/api";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ function Jobs() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
-  const loadJobs = () => {
+  const loadJobs = useCallback(() => {
     axios
       .get(getApiUrl("/job/all"), {
         headers: { Authorization: `Bearer ${token}` },
@@ -22,11 +22,11 @@ function Jobs() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  };
+  }, [token]);
 
   useEffect(() => {
     loadJobs();
-  }, []);
+  }, [loadJobs]);
 
   const handleApply = async (jobId) => {
     try {

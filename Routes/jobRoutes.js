@@ -1,35 +1,14 @@
 const express = require("express");
 const router = express.Router();
-
-
 const auth = require("../middleware/authMiddleware");
-const {
-createJob,
-getJobsWithApplyStatus,
-getJobById,
-getJobCount
-} = require("../controllers/jobController");
+const { createJob, getJobsWithApplyStatus, getJobById, getJobCount, applyToJobByParam, toggleSaveJob } = require("../controllers/jobController");
 
-
-// =====================
-// JOB ROUTES
-// =====================
-
-
-// Get all jobs (student view with apply status)
+router.get("/", auth, getJobsWithApplyStatus);
 router.get("/all", auth, getJobsWithApplyStatus);
-
-
-// Get total job count (dashboard stats)
 router.get("/count", getJobCount);
-
-
-// Create job (HR only)
 router.post("/create", auth, createJob);
-
-
-// Get single job by ID
-router.get("/:id", getJobById);
-
+router.get("/:id", auth, getJobById);
+router.post("/:id/apply", auth, applyToJobByParam);
+router.post("/:id/save", auth, toggleSaveJob);
 
 module.exports = router;
