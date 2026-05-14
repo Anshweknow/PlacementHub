@@ -37,6 +37,33 @@ function Login() {
     setError("");
   };
 
+  const redirectByRole = (role) => {
+    if (role === "hr") {
+      navigate("/dashboard-hr");
+    } else {
+      navigate("/student-dashboard");
+    }
+  };
+
+  const isTrialUser = (email) => Object.values(trialUsers).some((trial) => trial.email === String(email).toLowerCase());
+
+  const tryAutoProvisionTrialAccount = async (email, password) => {
+    const match = Object.entries(trialUsers).find(([, trial]) => trial.email === String(email).toLowerCase() && trial.password === password);
+    if (!match) return false;
+
+    const [role] = match;
+    const fullName = role === "hr" ? "HR Trial" : "Student Trial";
+
+    await axios.post(getApiUrl("/auth/register"), {
+      fullName,
+      email: String(email).toLowerCase(),
+      password,
+      role,
+    });
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -45,13 +72,24 @@ function Login() {
     try {
       const { data } = await axios.post(getApiUrl("/auth/login"), form);
       storeSession(data);
-
-      if (data.role === "hr") {
-        navigate("/dashboard-hr");
-      } else {
-        navigate("/student-dashboard");
-      }
+      redirectByRole(data.role);
     } catch (err) {
+      const status = err.response?.status;
+      const message = err.response?.data?.msg || "";
+      const canAutoProvision = status === 401 && message.toLowerCase().includes("invalid") && isTrialUser(form.email);
+
+      if (canAutoProvision) {
+        try {
+          await tryAutoProvisionTrialAccount(form.email, form.password);
+          const { data } = await axios.post(getApiUrl("/auth/login"), form);
+          storeSession(data);
+          redirectByRole(data.role);
+          return;
+        } catch {
+          // fall through to shared error message below
+        }
+      }
+
       setError(err.response?.data?.msg || "Login failed. Please check your credentials and try again.");
     } finally {
       setLoading(false);
