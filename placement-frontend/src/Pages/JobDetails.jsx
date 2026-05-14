@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { getApiUrl } from "../config/api";
+import { authHeaders, getApiUrl } from "../config/api";
 
 function JobDetails() {
   const { id } = useParams();
@@ -9,11 +9,10 @@ function JobDetails() {
   const [loading, setLoading] = useState(true);
 
   const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios
-      .get(getApiUrl(`/job/${id}`))
+      .get(getApiUrl(`/job/${id}`), { headers: authHeaders() })
       .then((res) => {
         setJob(res.data);
         setLoading(false);
@@ -29,7 +28,7 @@ function JobDetails() {
       await axios.post(
         getApiUrl("/application/apply"),
         { jobId: id },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: authHeaders() }
       );
 
       alert("Application Submitted!");

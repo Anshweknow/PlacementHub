@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getApiUrl } from "../config/api";
+import { getApiUrl, storeSession } from "../config/api";
 import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
@@ -12,9 +12,10 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(getApiUrl("/auth/register"), form);
-      alert("Registration successful. Please login.");
-      navigate("/");
+      const { data } = await axios.post(getApiUrl("/auth/register"), form);
+      storeSession(data);
+      alert("Registration successful.");
+      navigate(data.role === "hr" ? "/dashboard-hr" : "/student-dashboard");
     } catch (err) {
       alert(err.response?.data?.msg || "Registration failed");
     }
