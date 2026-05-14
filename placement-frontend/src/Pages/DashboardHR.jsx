@@ -240,7 +240,20 @@ const DashboardHR = () => {
     URL.revokeObjectURL(url);
   };
 
-  const navItems = ["Dashboard Overview", "AI Candidate Matcher", "Post Job", "Manage Jobs", "Applications", "Shortlisted Candidates", "Interview Scheduler", "Messages", "Offer Letters", "Analytics", "Company Profile", "Settings"];
+  const navItems = [
+    { label: "Dashboard Overview", icon: "📊" },
+    { label: "AI Candidate Matcher", icon: "🤖" },
+    { label: "Post Job", icon: "➕" },
+    { label: "Manage Jobs", icon: "💼" },
+    { label: "Applications", icon: "📥" },
+    { label: "Shortlisted Candidates", icon: "⭐" },
+    { label: "Interview Scheduler", icon: "🗓️" },
+    { label: "Messages", icon: "💬" },
+    { label: "Offer Letters", icon: "📄" },
+    { label: "Analytics", icon: "📈" },
+    { label: "Company Profile", icon: "🏢" },
+    { label: "Settings", icon: "⚙️" },
+  ];
   const metrics = [
     ["Active Jobs", dashboard.metrics.activeJobs, "+12%", "💼"],
     ["Total Applications", dashboard.metrics.totalApplications, "+28%", "📥"],
@@ -255,7 +268,7 @@ const DashboardHR = () => {
       <aside className={`hr-sidebar ${sidebarOpen ? "" : "is-collapsed"}`}>
         <button className="hr-collapse" onClick={() => setSidebarOpen((open) => !open)}>{sidebarOpen ? "←" : "→"}</button>
         <div className="hr-brand"><span>PH</span><div><strong>PlacementHub</strong><small>Recruiter ATS</small></div></div>
-        <nav>{navItems.map((item) => <button key={item} className={activeModule === item ? "active" : ""} onClick={() => setActiveModule(item)}><span>{item.split(" ")[0]}</span>{sidebarOpen && item}</button>)}</nav>
+        <nav>{navItems.map((item) => <button key={item.label} className={activeModule === item.label ? "active" : ""} onClick={() => setActiveModule(item.label)} title={item.label}><span aria-hidden="true">{item.icon}</span>{sidebarOpen && <strong>{item.label}</strong>}</button>)}</nav>
       </aside>
 
       <main className="hr-main">
